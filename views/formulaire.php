@@ -6,6 +6,8 @@ Fichier : formulaire.php
 
 // empêche l'accès direct au fichier sans passer par index.php
 
+
+
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
 	header("Location:../index.php?view=accueil");

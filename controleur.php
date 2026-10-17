@@ -111,10 +111,20 @@ if ($action = valider ("action"))
 			}
 		}
 		
-
+		// On récupère le chemin de l'image qu'on vient d'enregistrer
+        $chemin_fond = "uploads/" . $fichier;
+        
+        // On utilise getimagesize pour lire sa taille réelle
+        $dimensions = getimagesize($chemin_fond);
+        $largeur_fond = $dimensions[0];
+        $hauteur_fond = $dimensions[1];
+        // On modifie l'appel pour envoyer $largeur_fond et $hauteur_fond à la fonction
+        $resultat = genererGif($chemin_fond, $texte, $logo, $largeur_fond, $hauteur_fond, $police, $couleur, $position_texte, $position_logo);
+		
+		
 		//rediriger("index.php", "view=Formulaire&msg=" . urlencode("Texte et image bien reçu."));
 		
-		$resultat = genererGif("uploads/" .$fichier, $texte, $logo, $police, $couleur, $position_texte, $position_logo);
+		//$resultat = genererGif("uploads/" .$fichier, $texte, $logo, $police, $couleur, $position_texte, $position_logo);
 		if (!$resultat)
 		{
 			rediriger("index.php", "view=Formulaire&msg=" . urlencode("La génération a échoué."));

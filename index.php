@@ -8,7 +8,7 @@ include_once "libs/maLibGif.php";
 
 $view = getValue("view", "Accueil"); //par défaut la vue est Accueil
 
-//include "views/header.php";
+include "views/header.php";
 
 switch($view){
 
@@ -25,5 +25,5 @@ switch($view){
 		break;
 }
 
-//include "views/footer.php";
+include "views/footer.php";
 ?>

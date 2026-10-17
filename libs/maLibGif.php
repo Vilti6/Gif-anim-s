@@ -27,11 +27,36 @@ function ouvrirImage($chemin)
 }
 
 // cree une frame qui contient une copie de l'image de fond
-function creerFrame($fond, $largeur, $hauteur)
+/*function creerFrame($fond, $largeur, $hauteur)
 {
 	$frame = imagecreate($largeur, $hauteur);
 	imagecopyresized($frame, $fond, 0, 0, 0, 0, $largeur, $hauteur, $largeur, $hauteur);
 	return $frame;
+}*/
+
+function creerFrame($fond, $largeur, $hauteur) {
+    // On utilise strictement imagecreate(), comme vu Slide 68
+    $frame = imagecreate($largeur, $hauteur);
+    
+    // On alloue une couleur de base (par exemple blanc) pour initialiser l'image, comme Slide 70
+    $blanc = imagecolorallocate($frame, 255, 255, 255);
+    imagefilledrectangle($frame, 0, 0, $largeur, $hauteur, $blanc);
+    
+    // On rÃ©cupÃ¨re les dimensions d'origine de l'image de fond
+    $largeur_originale = imagesx($fond);
+    $hauteur_originale = imagesy($fond);
+    
+    // On copie le fond sur notre frame vide en utilisant imagecopyresized, comme vu Slide 71
+    imagecopyresized(
+        $frame,              // Destination
+        $fond,               // Source
+        0, 0,                // Position X,Y de destination
+        0, 0,                // Position X,Y source
+        $largeur, $hauteur,  // Taille de destination
+        $largeur_originale, $hauteur_originale // Taille source
+    );
+    
+    return $frame;
 }
 
 // ajouter le texte sur la frame
@@ -46,12 +71,12 @@ function ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $large
 	// renvoie un tableau de 8 valeurs qui correspondent aux coordonnees des 4 coins du rectangle englobant le texte, en partant du coin inferieur gauche
 	$mesure = imagettfbbox($taille, 0, $police , $texte);
 	
-	// on retrouve la largeur  qui correspond à la distance entre le cote gauche et le cote droit du texte
+	// on retrouve la largeur  qui correspond ï¿½ la distance entre le cote gauche et le cote droit du texte
 	$largeur_texte = $mesure[2] - $mesure[0];
 	
-	// la hauteur est coin supérieur à gauche - coin inférieur gauche
+	// la hauteur est coin supï¿½rieur ï¿½ gauche - coin infï¿½rieur gauche
 	$hauteur_texte = $mesure[1] - $mesure[7];
-	// on calcule les coordonnées du texte en x : largeur de l'image - largeur du texte /2
+	// on calcule les coordonnï¿½es du texte en x : largeur de l'image - largeur du texte /2
 	// par defaut le texte est au centre
 	$x = ($largeur - $largeur_texte) /2;
 	
@@ -128,7 +153,7 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 // Produit le gif anime
 function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_texte, $position_logo)
 {
-	// définir le dossier contenant les polices
+	// dï¿½finir le dossier contenant les polices
 	putenv('GDFONTPATH=' . realpath('fonts'));
 
 	
@@ -174,7 +199,7 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
 	
 	imagedestroy($fond);
 	
-	//Appel à makegif
+	//Appel ï¿½ makegif
 	$commande = "./makegif -d 100 gifs/" .$id. ".gif " . $frames[0]. " " . $frames[1]. " " . $frames[2];
 	exec($commande, $sortie, $codeRetour);
 	
@@ -204,7 +229,9 @@ function listerLogos()
 	
 	while($nom = readdir($fp))
 	{
-		$logos[] = $nom;
+		if ($nom != "." && $nom != "..") {
+			$logos[] = $nom;
+		}
 	}
 	closedir($fp);
 	return $logos;
@@ -218,7 +245,9 @@ function listerPolices()
 	
 	while ($nom = readdir($fp))
 	{
-		$polices[] = $nom;
+		if ($nom != "." && $nom != "..") {
+			$polices[] = $nom;
+		}
 	}
 	closedir($fp);
 	return $polices;

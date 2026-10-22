@@ -37,51 +37,36 @@ function creerFrame($fond, $largeur, $hauteur)
 }
 
 
-// ajouter le texte sur la frame
 function ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur)
 {
-	// on calcule la taille du texte
-	$taille = $hauteur/10;
+	// On force un minimum de 1 pour la taille de la police
+	$taille = max(1, (int)($hauteur / 10));
 	
-	// imagettftext donne la taille du texte et renvoie un tableau
-	// array imagettftext ( resource $image , float $size , float $angle , int $x , int $y , int $color , string $fontfile , string $text )
-	
-	// renvoie un tableau de 8 valeurs qui correspondent aux coordonnees des 4 coins du rectangle englobant le texte, en partant du coin inferieur gauche
 	$mesure = imagettfbbox($taille, 0, $police , $texte);
 	
-	// on retrouve la largeur  qui correspond à la distance entre le cote gauche et le cote droit du texte
 	$largeur_texte = $mesure[2] - $mesure[0];
-	
-	// la hauteur est coin supérieur à gauche - coin inférieur gauche
 	$hauteur_texte = $mesure[1] - $mesure[7];
-	// on calcule les coordonnées du texte en x : largeur de l'image - largeur du texte /2
-	// par defaut le texte est au centre
-	$x = ($largeur - $largeur_texte) /2;
 	
-	// meme chose en y
-	$y = ($hauteur + $hauteur_texte)/2;
-	
-	
+	$x = (int)(($largeur - $largeur_texte) / 2);
+	$y = (int)(($hauteur + $hauteur_texte) / 2);
 	
 	if ($position_texte == "haut")
 	{
-		$y = ($hauteur_texte + $hauteur / 20);
+		$y = (int)($hauteur_texte + ($hauteur / 20));
 	}
 	else if ($position_texte == "bas")
 	{
-		$y = ($hauteur - $hauteur / 20);
+		$y = (int)($hauteur - ($hauteur / 20));
 	}
 	else if ($position_texte == "gauche")
 	{
-		$x = ($largeur / 20);
+		$x = (int)($largeur / 20);
 	}
 	else if ($position_texte == "droite")
 	{
-		$x = ($largeur - $largeur_texte - $largeur/20);
+		$x = (int)($largeur - $largeur_texte - ($largeur / 20));
 	}
 	
-	
-	// pour la couleur du texte 
 	$color = couleurTexte($frame, $couleur);
 	imagettftext($frame, $taille, 0, $x, $y, $color, $police, $texte);
 }
@@ -96,9 +81,12 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 	}
 	$specs = getimagesize($chemin_logo);
 	
-	$largeur_logo = $largeur /6;
-	// pour la hauteur
-	$hauteur_logo = $largeur_logo * $specs[1] / $specs[0];
+	// On force un minimum de 1 pixel pour Ã©viter l'erreur de hauteur/largeur Ã  0
+	$largeur_logo = max(1, (int)($largeur / 6));
+	$hauteur_logo = max(1, (int)($largeur_logo * $specs[1] / $specs[0]));
+	
+	$x1 = 0;
+	$y1 = 0;
 	
 	switch ($position_logo)
 	{
@@ -108,92 +96,76 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
             break;
             
         case "haut-droite":
-            $x1 = $largeur - $largeur_logo;
+            $x1 = (int)($largeur - $largeur_logo);
             $y1 = 0;
             break;
             
         case "bas-gauche":
             $x1 = 0;
-            $y1 = $hauteur - $hauteur_logo;
+            $y1 = (int)($hauteur - $hauteur_logo);
             break;
             
         case "bas-droite":
-            $x1 = $largeur - $largeur_logo;
-            $y1 = $hauteur - $hauteur_logo;
+            $x1 = (int)($largeur - $largeur_logo);
+            $y1 = (int)($hauteur - $hauteur_logo);
             break;
     }
 	
 	imagecopyresized($frame, $logo, $x1, $y1, 0, 0, $largeur_logo, $hauteur_logo, $specs[0], $specs[1]);
 	imagedestroy($logo);
 	return true;
-	
 }
+	
 // Produit le gif anime
-function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_texte, $position_logo)
+function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_texte, $position_logo, $largeur_perso, $hauteur_perso, $nb_frames, $duree)
 {
-	// définir le dossier contenant les polices
 	putenv('GDFONTPATH=' . realpath('fonts'));
 
-	
-	// la taille des frames et la meme que la taille de l'imae de fond
-	$specs = getimagesize($chemin_fond);
-	$largeur = $specs[0];
-	$hauteur = $specs[1];
-	
 	$fond = ouvrirImage($chemin_fond);
+	if (!$fond) return false;
 	
-	// si le fond n'est pas du bon format on retourne faux
-	if (!$fond)
-	{
-		return false;
-	}
+	$specs = getimagesize($chemin_fond);
 	
-	// si le fond est du bon format, alors : 
+	// Si largeur et hauteur sont Ã  0, on garde la taille de l'image de fond
+	$largeur = ($largeur_perso > 0) ? $largeur_perso : $specs[0];
+	$hauteur = ($hauteur_perso > 0) ? $hauteur_perso : $specs[1];
+	
 	$id = uniqid();
 	$frames = array();
+	$chemins_frames_pour_commande = ""; // Pour stocker "frames/id_1.gif frames/id_2.gif..."
 	
-	// Frame 1, que le fond
-	$frame = creerFrame($fond, $largeur, $hauteur);
-	// on range dans le tableau frames la premiere frame qui est le fond
-	$frames[0] = "frames/" . $id. "_1.gif";
-	imagegif($frame, $frames[0]);
-	
-	imagedestroy($frame);
-	
-	// frame 2, le fond et le texte 
-	$frame = creerFrame($fond, $largeur, $hauteur);
-	ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur);
-	$frames[1] = "frames/" . $id. "_2.gif";
-	imagegif($frame, $frames[1]);
-	imagedestroy($frame);
-	
-	//frame 3, le fond, le texte et le logo 
-	$frame = creerFrame($fond, $largeur, $hauteur);
-	ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur);
-	ajouterLogo($frame, "logos/". $logo, $position_logo, $largeur, $hauteur);
-	$frames[2] = "frames/" . $id. "_3.gif";
-	imagegif($frame, $frames[2]);
-	imagedestroy($frame);
+	for ($i = 1; $i <= $nb_frames; $i++) {
+		
+		$frame = creerFrame($fond, $largeur, $hauteur);
+		
+		ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur);
+		ajouterLogo($frame, "logos/". $logo, $position_logo, $largeur, $hauteur);
+		
+		$nom_fichier = "frames/" . $id . "_" . $i . ".gif";
+		$frames[] = $nom_fichier; // On stocke pour pouvoir les supprimer plus tard
+		
+		imagegif($frame, $nom_fichier);
+		imagedestroy($frame);
+		
+		// On ajoute ce fichier Ã  la chaÃ®ne de texte qui servira de commande
+		$chemins_frames_pour_commande .= " " . $nom_fichier;
+	}
 	
 	imagedestroy($fond);
 	
-	//Appel à makegif
-	$commande = "./makegif -d 100 gifs/" .$id. ".gif " . $frames[0]. " " . $frames[1]. " " . $frames[2];
+	$commande = "./makegif -d $duree gifs/" .$id. ".gif" . $chemins_frames_pour_commande;
 	exec($commande, $sortie, $codeRetour);
 	
-	//supprimer les frames dans le dossier frames
-	for ($i = 1; $i <= 3; $i++){
-		$fichier_supprimer = "frames/".$id. "_" . $i . ".gif";
-		if (file_exists($fichier_supprimer)){
-			unlink($fichier_supprimer);
+	// on supprime toutes les frames du dossier
+	foreach ($frames as $f) {
+		if (file_exists($f)) {
+			unlink($f);
 		}
 	}
 	
-	//afficher
-	if ($codeRetour == 0){
+	if ($codeRetour == 0) {
 		return $id;
-	}
-	else{
+	} else {
 		return false;
 	}
 }

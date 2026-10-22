@@ -3,12 +3,12 @@
 
 /**
  * @file maLibUtils.php
- * Ce fichier définit des fonctions d'accès ou d'affichage pour les tableaux superglobaux
+ * Ce fichier dï¿½finit des fonctions d'accï¿½s ou d'affichage pour les tableaux superglobaux
  */
 
 /**
- * Vérifie l'existence (isset) et la taille (non vide) d'un paramètre dans un des tableaux GET, POST, COOKIES, SESSION
- * Renvoie false si le paramètre est vide ou absent
+ * Vï¿½rifie l'existence (isset) et la taille (non vide) d'un paramï¿½tre dans un des tableaux GET, POST, COOKIES, SESSION
+ * Renvoie false si le paramï¿½tre est vide ou absent
  * @note l'utilisation de empty est critique : 0 est empty !!
  * Lorsque l'on teste, il faut tester avec un ===
  * @param string $nom
@@ -44,13 +44,13 @@ function valider($nom,$type="REQUEST")
 			return $_SERVER[$nom]; 		
 		break;
 	}
-	return false; // Si pb pour récupérer la valeur 
+	return false; // Si pb pour rï¿½cupï¿½rer la valeur 
 }
 
 
 /**
- * Vérifie l'existence (isset) et la taille (non vide) d'un paramètre dans un des tableaux GET, POST, COOKIE, SESSION
- * Prend un argument définissant la valeur renvoyée en cas d'absence de l'argument dans le tableau considéré
+ * Vï¿½rifie l'existence (isset) et la taille (non vide) d'un paramï¿½tre dans un des tableaux GET, POST, COOKIE, SESSION
+ * Prend un argument dï¿½finissant la valeur renvoyï¿½e en cas d'absence de l'argument dans le tableau considï¿½rï¿½
 
  * @param string $nom
  * @param string $defaut
@@ -77,7 +77,7 @@ function getValue($nom,$defaut=false,$type="REQUEST")
 function proteger($str)
 {
 	// attention au cas des select multiples !
-	// On pourrait passer le tableau par référence et éviter la création d'un tableau auxiliaire
+	// On pourrait passer le tableau par rï¿½fï¿½rence et ï¿½viter la crï¿½ation d'un tableau auxiliaire
 	if (is_array($str))
 	{
 		$nextTab = array();
@@ -105,22 +105,22 @@ function tprint($tab, $nom="")
 function rediriger($url,$qs="")
 {
 	// if ($qs != "")	 $qs = urlencode($qs);	
-	// Il faut respecter l'encodage des caractères dans les chaînes de requêtes
-	// NB : Pose des problèmes en cas de valeurs multiples
-	// TODO: Passer un tabAsso en paramètres
+	// Il faut respecter l'encodage des caractï¿½res dans les chaï¿½nes de requï¿½tes
+	// NB : Pose des problï¿½mes en cas de valeurs multiples
+	// TODO: Passer un tabAsso en paramï¿½tres
 
 	if ($qs != "") $qs = "?$qs";
  
-	header("Location:$url$qs"); // envoi par la méthode GET
-	die(""); // interrompt l'interprétation du code 
+	header("Location:$url$qs"); // envoi par la mï¿½thode GET
+	die(""); // interrompt l'interprï¿½tation du code 
 
 	// TODO: on pourrait passer en parametre le message servant au die...
 }
 
-// TODO: intégrer les redirections vers la page index dans une fonction :
+// TODO: intï¿½grer les redirections vers la page index dans une fonction :
 
 /*
-// Si la page est appelée directement par son adresse, on redirige en passant pas la page index
+// Si la page est appelï¿½e directement par son adresse, on redirige en passant pas la page index
 if (basename($_SERVER["PHP_SELF"]) != "index.php")
 {
 	header("Location:../index.php");

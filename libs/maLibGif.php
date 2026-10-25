@@ -351,9 +351,4 @@ function extensionImage($chemin)
 	}
 	return false;
 }
-
-
-
-
-
 ?>

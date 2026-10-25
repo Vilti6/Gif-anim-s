@@ -30,17 +30,17 @@ switch($view){
 		break;
 		
 	case "Formulaire" : 
-		// requireConnexion();
+		requireConnexion();
 		include "views/formulaire.php";
 		break;
 		
 	case "Projets" :
-		// requireConnexion();
+		requireConnexion();
 		include "views/projets.php";
 		break;
 		
 	case "Gif" :
-		// requireConnexion();
+		requireConnexion();
 		include "views/gif.php";
 		break;
 		

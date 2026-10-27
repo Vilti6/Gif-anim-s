@@ -46,7 +46,7 @@ function creerFrame($fond, $largeur, $hauteur)
 function ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur, $decalage_x, $decalage_y, $alpha)
 {
 	// on calcule la taille du texte
-	$taille = $hauteur/10;
+	$taille = $hauteur/10; // imagettftext accepte les float pour la taille, pas de souci ici
 	
 	// imagettftext donne la taille du texte et renvoie un tableau
 	// array imagettftext ( resource $image , float $size , float $angle , int $x , int $y , int $color , string $fontfile , string $text )
@@ -54,44 +54,44 @@ function ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $large
 	// renvoie un tableau de 8 valeurs qui correspondent aux coordonnees des 4 coins du rectangle englobant le texte, en partant du coin inferieur gauche
 	$mesure = imagettfbbox($taille, 0, $police , $texte);
 	
-	// on retrouve la largeur  qui correspond à la distance entre le cote gauche et le cote droit du texte
+	// on retrouve la largeur  qui correspond Ã  la distance entre le cote gauche et le cote droit du texte
 	$largeur_texte = $mesure[2] - $mesure[0];
 	
-	// la hauteur est coin supérieur à gauche - coin inférieur gauche
+	// la hauteur est coin supÃ©rieur Ã  gauche - coin infÃ©rieur gauche
 	$hauteur_texte = $mesure[1] - $mesure[7];
-	// on calcule les coordonnées du texte en x : largeur de l'image - largeur du texte /2
+	
+	// CORRECTION ICI : on force en entier (int)
+	// on calcule les coordonnÃ©es du texte en x : largeur de l'image - largeur du texte /2
 	// par defaut le texte est au centre
-	$x = ($largeur - $largeur_texte) /2;
+	$x = (int)(($largeur - $largeur_texte) /2);
 	
 	// meme chose en y
-	$y = ($hauteur + $hauteur_texte)/2;
-	
-	
+	$y = (int)(($hauteur + $hauteur_texte)/2);
 	
 	if ($position_texte == "haut")
 	{
-		$y = ($hauteur_texte + $hauteur / 20);
+		$y = (int)($hauteur_texte + $hauteur / 20);
 	}
 	else if ($position_texte == "bas")
 	{
-		$y = ($hauteur - $hauteur / 20);
+		$y = (int)($hauteur - $hauteur / 20);
 	}
 	else if ($position_texte == "gauche")
 	{
-		$x = ($largeur / 20);
+		$x = (int)($largeur / 20);
 	}
 	else if ($position_texte == "droite")
 	{
-		$x = ($largeur - $largeur_texte - $largeur/20);
+		$x = (int)($largeur - $largeur_texte - $largeur/20);
 	}
 	
-	
 	//on ajoute le decalage pour le defilement 
-	$x = $x + $decalage_x;
-	$y = $y + $decalage_y;
+	$x = (int)($x + $decalage_x);
+	$y = (int)($y + $decalage_y);
+	
 	// pour la couleur du texte 
 	$color = couleurTexte($frame, $couleur, $alpha);
-	imagettftext($frame, $taille, 0, (int)$x, (int)$y, $color, $police, $texte);
+	imagettftext($frame, $taille, 0, $x, $y, $color, $police, $texte);
 }
 
 // ajoute le logo sur une frame 
@@ -104,10 +104,10 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 	}
 	$specs = getimagesize($chemin_logo);
 	
+	// CORRECTION ICI : on force en entier (int)
 	$largeur_logo = (int)($largeur /6);
 	// pour la hauteur
 	$hauteur_logo = (int)($largeur_logo * $specs[1] / $specs[0]);
-	
 	
 	switch ($position_logo)
 	{
@@ -117,18 +117,18 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 			break;
             
         case "haut-droite":
-            $x1 = $largeur - $largeur_logo;
+            $x1 = (int)($largeur - $largeur_logo);
             $y1 = 0;
             break;
             
         case "bas-gauche":
             $x1 = 0;
-            $y1 = $hauteur - $hauteur_logo;
+            $y1 = (int)($hauteur - $hauteur_logo);
             break;
             
         case "bas-droite":
-            $x1 = $largeur - $largeur_logo;
-            $y1 = $hauteur - $hauteur_logo;
+            $x1 = (int)($largeur - $largeur_logo);
+            $y1 = (int)($hauteur - $hauteur_logo);
             break;
     }
 	
@@ -140,7 +140,7 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 // Produit le gif anime
 function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_texte, $position_logo, $largeur_perso, $hauteur_perso, $nb_frames, $duree, $apparition, $defilement)
 {
-	// définir le dossier contenant les polices
+	// dÃ©finir le dossier contenant les polices
 	putenv('GDFONTPATH=' . realpath('fonts'));
 
 	$fond = ouvrirImage($chemin_fond);
@@ -166,8 +166,6 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
     	$hauteur = $specs[1];
 	}
 
-	
-	
 	// si le fond est du bon format, alors : 
 	if ($nb_frames < 3)
 	{
@@ -178,21 +176,20 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
 	
 	$chemins_frames = ""; // Pour stocker "frames/id_1.gif frames/id_2.gif..."
 	
-	
 	// frame 1 : le fond seul
-	//frames 2 à nb_frames-1 : le texte qui arrive
-	//dernière frame : le texte à sa place + le logo
+	//frames 2 Ã  nb_frames-1 : le texte qui arrive
+	//derniÃ¨re frame : le texte Ã  sa place + le logo
 	$nb_texte = $nb_frames - 2;
 
 	for ($i = 1; $i <= $nb_frames; $i++)
 	{
 		$frame = creerFrame($fond, $largeur, $hauteur);
 
-		// à partir de la frame 2 : le texte
+		// Ã  partir de la frame 2 : le texte
 		if ($i >= 2)
 		{
-			// avancement de 0 à 1
-			// 1 sur la dernière frame
+			// avancement de 0 Ã  1
+			// 1 sur la derniÃ¨re frame
 			if ($i == $nb_frames)
 			{
 				$avancement = 1;
@@ -202,13 +199,13 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
 				$avancement = ($i - 1) / $nb_texte;
 			}
 
-			// ce qui reste à parcourir : 1 au début, 0 quand le texte est à sa place
+			// ce qui reste Ã  parcourir : 1 au dÃ©but, 0 quand le texte est Ã  sa place
 			$reste = 1 - $avancement;
 			$decalage_x = 0;
 			$decalage_y = 0;
 			$alpha = 0;
 
-			// sens de défilement du texte
+			// sens de dÃ©filement du texte
 			if ($defilement == "gauche-droite")
 			{
 				$decalage_x = -(int)($reste * $largeur);
@@ -232,10 +229,62 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
 				$alpha = (int)(127 * $reste);
 			}
 
-			ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $largeur, $hauteur, $decalage_x, $decalage_y, $alpha);
+			// decoupage du texte selon le mode d'apparition
+			$texte_a_afficher = $texte;
+
+			if ($apparition == "lettre")
+			{
+				$longueur = strlen($texte);
+				$nb_lettres = (int)($longueur * $avancement);
+				$texte_a_afficher = substr($texte, 0, $nb_lettres);
+			}
+			else if ($apparition == "mot")
+			{
+				$longueur = strlen($texte);
+				
+				// on compte les espaces pour connaitre le nombre de mots
+				$nb_espaces = 0;
+				for ($j = 0; $j < $longueur; $j++)
+				{
+					if ($texte[$j] == ' ')
+					{
+						$nb_espaces++;
+					}
+				}
+				$total_mots = $nb_espaces + 1;
+				
+				$mots_cible = (int)($total_mots * $avancement);
+				
+				$texte_a_afficher = "";
+				$compteur_espaces = 0;
+				
+				if ($mots_cible > 0)
+				{
+					for ($j = 0; $j < $longueur; $j++)
+					{
+						if ($texte[$j] == ' ')
+						{
+							$compteur_espaces++;
+						}
+						
+						if ($compteur_espaces == $mots_cible)
+						{
+							break; 
+						}
+						
+						$texte_a_afficher = $texte_a_afficher . $texte[$j];
+					}
+				}
+			}
+
+			// on affiche que si on a du texte
+			if ($texte_a_afficher != "")
+			{
+				ajouterTexte($frame, $texte_a_afficher, $police, $couleur, $position_texte, $largeur, $hauteur, $decalage_x, $decalage_y, $alpha);
+			}
 		}
 
-		// le logo n'apparaît que sur la dernière frame
+		// le logo n'apparaÃ®t que sur la derniÃ¨re frame
 		if ($i == $nb_frames)
 		{
 			ajouterLogo($frame, "logos/" . $logo, $position_logo, $largeur, $hauteur);
@@ -248,14 +297,11 @@ function genererGif($chemin_fond, $texte, $logo, $police, $couleur, $position_te
 		$chemins_frames = $chemins_frames . " " . $nom_fichier;
 	}
 			
-		
-	
 	imagedestroy($fond);
 	
-	//Appel à makegif
+	//Appel Ã  makegif
 	$commande = "./makegif -d ".$duree . " gifs/" .$id. ".gif " . $chemins_frames;
-exec($commande, $sortie, $codeRetour);
-	
+	exec($commande, $sortie, $codeRetour);
 	
 	//supprimer les frames dans le dossier frames
 	for ($i = 1; $i <= $nb_frames; $i++){
@@ -351,4 +397,5 @@ function extensionImage($chemin)
 	}
 	return false;
 }
+
 ?>

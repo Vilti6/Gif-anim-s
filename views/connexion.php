@@ -4,25 +4,25 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php") {
 	die("");
 }
 ?>
-<div>
-    <h1>Se connecter</h1>
+<div id="boite-connexion" class="boite">
+    <h1 id="titre-connexion">Se connecter</h1>
 
     <?php 
     if ($msg = valider("msg")) { 
-        echo "<p>$msg</p>"; 
+        echo "<p class=\"message-erreur\">$msg</p>"; 
     } 
 
     mkForm("controleur.php", "POST");
     
     mkInput("hidden", "action", "Connexion");
         
-        echo "<label>Pseudo : ";
+        echo "<label class=\"etiquette\">Pseudo : ";
         mkInput("text", "pseudo");
         echo "</label>";
         echo "<br />";
         echo "<br />";
         
-        echo "<label>Mot de passe : ";
+        echo "<label class=\"etiquette\">Mot de passe : ";
         mkInput("password", "passe");
         echo "</label>";
         echo "<br />";
@@ -32,5 +32,5 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php") {
     endForm();
     ?>
     
-    <p>Pas encore de compte ? <?php mkLien("index.php", "S'inscrire ici", "view=Inscription"); ?>.</p>
+    <p class="texte-lien">Pas encore de compte ? <?php mkLien("index.php", "S'inscrire ici", "view=Inscription"); ?>.</p>
 </div>

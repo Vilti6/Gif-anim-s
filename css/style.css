@@ -1,136 +1,103 @@
-:root {
-    --primaire: #007bff;
-    --primaire-hover: #0056b3;
-    --fond: #f4f7f6;
-    --texte: #333;
-    --blanc: #fff;
-    --bordure: #ccc;
-}
-
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--fond);
-    color: var(--texte);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-#header {
-    background-color: var(--blanc);
-    padding: 20px;
+#titre-principal {
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    color: #0056b3;
 }
 
-#header h1 { margin: 0 0 5px 0; color: var(--primaire); }
-#header h2 { margin: 0 0 15px 0; font-size: 1.2em; color: #666; }
+#menu-navigation {
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
 
-#nav a {
+.lien-navigation {
     text-decoration: none;
-    color: var(--primaire);
+    color: #0056b3;
     font-weight: bold;
-    padding: 5px 10px;
-}
-#nav a:hover { text-decoration: underline; }
-#nav span { font-weight: bold; color: #333; }
-
-#main-content {
-    flex: 1;
-    padding: 30px 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
+    margin-right: 15px;
+    margin-left: 15px;
 }
 
-.container {
-    background: var(--blanc);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-}
-
-.form-container { max-width: 400px; margin: 0 auto; }
-.text-center { text-align: center; }
-.mt-20 { margin-top: 20px; }
-
-/* Formulaires */
-fieldset {
-    border: 1px solid var(--bordure);
-    border-radius: 5px;
+.boite {
+    background-color: white;
     padding: 20px;
-    margin-bottom: 20px;
-    background-color: #fafafa;
-}
-legend { font-weight: bold; color: var(--primaire); padding: 0 5px; }
-
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-
-.form-row { display: flex; gap: 15px; }
-.form-row .half { flex: 1; }
-
-input[type="text"], input[type="password"], select, input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--bordure);
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: var(--blanc);
+    border: 1px solid #ccc;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
 }
 
-.radio-label { display: inline-flex; align-items: center; gap: 5px; margin-right: 15px; margin-bottom: 10px; }
-
-.btn {
-    background-color: var(--primaire);
-    color: var(--blanc);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 1em;
-    font-weight: bold;
-    display: inline-block;
-}
-.btn:hover { background-color: var(--primaire-hover); }
-.btn-full { width: 100%; }
-.btn-large { padding: 12px 30px; font-size: 1.1em; }
-
-/* Projets */
-.project-item {
-    border-bottom: 1px solid #eee;
-    padding: 15px 0;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-.project-item:last-child { border-bottom: none; }
-.project-info p { margin: 0 0 5px 0; }
-.project-actions a { margin-right: 15px; color: var(--primaire); text-decoration: none; font-size: 0.9em; }
-.project-actions a:hover { text-decoration: underline; }
-
-.msg-box {
+.message-info {
     background-color: #e2f0d9;
     color: #2e7d32;
     padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    text-align: center;
     border: 1px solid #c8e6c9;
-}
-
-#footer {
     text-align: center;
-    padding: 20px;
-    background-color: var(--blanc);
-    color: #777;
-    font-size: 0.9em;
-    border-top: 1px solid #ddd;
 }
-#footer p { margin: 5px 0; }
 
+.message-erreur {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    text-align: center;
+}
+
+.bouton-valider {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.bouton-lien {
+    background-color: #0056b3;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 8px;
+    border-radius: 4px;
+}
+
+.groupe-champs {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fafafa;
+}
+
+.titre-groupe {
+    color: #0056b3;
+    font-weight: bold;
+}
+
+.etiquette {
+    font-weight: bold;
+}
+
+.champ-texte, .champ-fichier, .champ-select, .champ-nombre {
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+}
+
+#pied-de-page {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+.texte-pied {
+    margin: 5px;
+}

@@ -10,7 +10,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 	die("");
 }
 
-echo "<h1>Les projets</h1>";
+echo "<h1 id=\"titre-projets\">Les projets</h1>";
 
 // pour le nombre de projets
 $aucun = true;
@@ -24,13 +24,13 @@ foreach (listerProjets(utilisateurCourant()) as $p)
 	
 	if (file_exists("gifs/" . $id. ".gif"))
 	{
-		echo "<img src=\"gifs/$id.gif\" height=\"50\" alt= \"GIF\"/>";
+		echo "<img class=\"miniature-gif\" src=\"gifs/$id.gif\" height=\"50\" alt= \"GIF\"/>";
 	}
 	
-	echo "<p>" . htmlspecialchars($p['nom']) . "</p>";
-	echo "<a href=\"index.php?view=Gif&id=".$id ."\">Voir</a>";
+	echo "<p class=\"nom-projet\">" . htmlspecialchars($p['nom']) . "</p>";
+	echo "<a class=\"bouton-lien\" href=\"index.php?view=Gif&id=".$id ."\">Voir</a>";
 	echo "<br />";
-	echo "<a href=\"index.php?view=Formulaire&projet=" . $id."\">Reprendre</a>";
+	echo "<a class=\"bouton-lien\" href=\"index.php?view=Formulaire&projet=" . $id."\">Reprendre</a>";
 	echo "<br />";
 	echo "<br />";
 
@@ -39,8 +39,6 @@ foreach (listerProjets(utilisateurCourant()) as $p)
 
 if ($aucun)
 {
-	echo "<p>Aucun projet pour le moment.</p>";
+	echo "<p class=\"message-info\">Aucun projet pour le moment.</p>";
 }
 ?>
-
-

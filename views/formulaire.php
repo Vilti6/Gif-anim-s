@@ -15,7 +15,7 @@ if (basename($_SERVER["PHP_SELF"]) != "index.php")
 
 if ($msg = valider ("msg"))
 {
-	echo "<p>$msg</p>";
+	echo "<p class=\"message-info\">$msg</p>";
 }
 /*
 // on regarde si on recoit un gif 
@@ -50,7 +50,9 @@ $defilement_p = parametre($projet_repris, "defilement", "aucun");
 
 $tabApparition = array(
     array("val" => "coup", "label" => "D'un coup (par défaut)"),
-    array("val" => "fondu", "label" => "Fondu (Fade in)")
+    array("val" => "fondu", "label" => "Fondu (Fade in)"),
+    array("val" => "lettre", "label" => "Lettre par lettre"),
+    array("val" => "mot", "label" => "Mot par mot")
 );
 
 $tabDefilement = array(
@@ -64,10 +66,10 @@ $tabDefilement = array(
 $polices = listerPolices();
 ?>
 
-<h1>Création de GIF animé</h1>
+<h1 id="titre-formulaire">Création de GIF animé</h1>
 
 
-<form enctype="multipart/form-data" action="controleur.php" method="post">
+<form id="formulaire-gif" class="boite" enctype="multipart/form-data" action="controleur.php" method="post">
 	<?php
 
 		echo "<input type=\"hidden\" name=\"projet\" value=\"" . htmlspecialchars($projet) . "\" />";
@@ -75,32 +77,32 @@ $polices = listerPolices();
 	?>
 	<input type="hidden" name="MAX_FILE_SIZE" value="10000000">
 
-	<fieldset>
-		<legend>Image de fond</legend>
-		<label for="image_fond">Choisir une image de fond :</label>
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Image de fond</legend>
+		<label class="etiquette" for="image_fond">Choisir une image de fond :</label>
 		<br />
-		<input type="file" name="image_fond" id="image_fond"/>
+		<input class="champ-fichier" type="file" name="image_fond" id="image_fond"/>
 		<?php
 			if ($fond_p != "" && file_exists("uploads/" . $fond_p))
 			{
-				echo "<img src=\"uploads/$fond_p\"height=\"60\"alt=\"Image\" /> Image actuelle";
+				echo "<img class=\"image-actuelle\" src=\"uploads/$fond_p\"height=\"60\"alt=\"Image\" /> Image actuelle";
 			}
 		?>
 	</fieldset>
 	
 	<br />
 	
-	<fieldset>
-		<legend>Texte de l'animation</legend>
-		<label for="texte_gif">Saisir un texte :</label>
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Texte de l'animation</legend>
+		<label class="etiquette" for="texte_gif">Saisir un texte :</label>
 		<br />
 		<?php
-			echo "<input type=\"text\" name=\"texte_gif\" value=\"" . htmlspecialchars($texte_p) . "\" />";
+			echo "<input class=\"champ-texte\" type=\"text\" name=\"texte_gif\" value=\"" . htmlspecialchars($texte_p) . "\" />";
 		?>
 	</fieldset>
 	
-	<fieldset>
-		<legend>Logo</legend>
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Logo</legend>
 		<?php	
 			foreach ($logos as $next)
 			{
@@ -109,24 +111,24 @@ $polices = listerPolices();
 				{
 					$actuel = "checked";
 				}
-				echo "<label>";
-				echo "<input type=\"radio\" name=\"logo\" value=\"$next\" $actuel>";
-				echo "<img src=\"logos/$next\" height=\"40\"alt=\"$next\"/>";
+				echo "<label class=\"etiquette-radio\">";
+				echo "<input class=\"champ-radio\" type=\"radio\" name=\"logo\" value=\"$next\" $actuel>";
+				echo "<img class=\"logo-radio\" src=\"logos/$next\" height=\"40\"alt=\"$next\"/>";
 				echo "</label> ";
 				echo "<br />";
 			}
 		?>
-		<label for="nouveau_logo">Nouveau logo :</label>
+		<label class="etiquette" for="nouveau_logo">Nouveau logo :</label>
 		<br />
-		<input type="file" name="nouveau_logo" id="nouveau_logo"/>
+		<input class="champ-fichier" type="file" name="nouveau_logo" id="nouveau_logo"/>
 	</fieldset>
 	
 	<br />
 	
-	<fieldset>
-		<legend>Personnalisation</legend>
-		<label for="position_logo">Position du logo :</label>
-		<select name="position_logo" id="position_logo">
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Personnalisation</legend>
+		<label class="etiquette" for="position_logo">Position du logo :</label>
+		<select class="champ-select" name="position_logo" id="position_logo">
 			<option value="haut-gauche"
 			<?php 
 				if ($position_logo_p == "haut-gauche")
@@ -162,8 +164,8 @@ $polices = listerPolices();
 		</select>
 		
 		<br />
-		<label for="position_texte">Position du texte :</label>
-		<select name="position_texte" id="position_texte">
+		<label class="etiquette" for="position_texte">Position du texte :</label>
+		<select class="champ-select" name="position_texte" id="position_texte">
 			<option value="centre"
 			<?php 
 				if ($position_texte_p == "centre")
@@ -208,8 +210,8 @@ $polices = listerPolices();
 		
 		<br />
 		
-		<label for="police">Police du texte :</label>
-		<select name="police" id="police">
+		<label class="etiquette" for="police">Police du texte :</label>
+		<select class="champ-select" name="police" id="police">
         <?php
         	
         	foreach (listerPolices() as $nom_police)
@@ -227,8 +229,8 @@ $polices = listerPolices();
 		
 		<br />
 		
-		<label for="couleur">Couleur du texte :</label>
-		<select name="couleur" id="couleur">
+		<label class="etiquette" for="couleur">Couleur du texte :</label>
+		<select class="champ-select" name="couleur" id="couleur">
 			<option value="blanc"
 			<?php 
 				if ($couleur_p == "blanc")
@@ -265,49 +267,49 @@ $polices = listerPolices();
 
 	</fieldset>
 	<br />
-	<fieldset>
-		<legend>Animation du texte</legend>
-		<label for="apparition">Mode d'apparition :</label>
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Animation du texte</legend>
+		<label class="etiquette" for="apparition">Mode d'apparition :</label>
 		<?php 
-			mkSelect("apparition\" id=\"apparition", $tabApparition, "val", "label", $apparition_p); 
+			mkSelect("apparition\" id=\"apparition\" class=\"champ-select", $tabApparition, "val", "label", $apparition_p); 
 		?>
 		<br />
 		
-		<label for="defilement">Sens de défilement :</label>
+		<label class="etiquette" for="defilement">Sens de défilement :</label>
 		<?php 
-			mkSelect("defilement\" id=\"defilement", $tabDefilement, "val", "label", $defilement_p); 
+			mkSelect("defilement\" id=\"defilement\" class=\"champ-select", $tabDefilement, "val", "label", $defilement_p); 
 		?>
 	</fieldset>
 	<br />
-	<fieldset>
-        <legend>Paramètres de l'animation</legend>
-        <label for="largeur">Largeur (0 = taille de l'image de fond) :</label>
+	<fieldset class="groupe-champs">
+        <legend class="titre-groupe">Paramètres de l'animation</legend>
+        <label class="etiquette" for="largeur">Largeur (0 = taille de l'image de fond) :</label>
         <?php 
-        	mkInput("number", "largeur", $largeur_p, "id=\"largeur\" min=\"0\""); 
+        	mkInput("number", "largeur", $largeur_p, "id=\"largeur\" class=\"champ-nombre\" min=\"0\""); 
         ?>
         <br />
 
-        <label for="hauteur">Hauteur (0 = taille de l'image de fond) :</label>
+        <label class="etiquette" for="hauteur">Hauteur (0 = taille de l'image de fond) :</label>
         <?php 
-        	mkInput("number", "hauteur", $hauteur_p, "id=\"hauteur\" min=\"0\""); 
+        	mkInput("number", "hauteur", $hauteur_p, "id=\"hauteur\" class=\"champ-nombre\" min=\"0\""); 
         ?>
-        <label for="nb_frames">Nombre d'images (frames) :</label>
+        <label class="etiquette" for="nb_frames">Nombre d'images (frames) :</label>
         <?php 
-        	mkInput("number", "nb_frames", $nb_frames_p, "id=\"nb_frames\" min=\"2\" max=\"50\""); 
+        	mkInput("number", "nb_frames", $nb_frames_p, "id=\"nb_frames\" class=\"champ-nombre\" min=\"2\" max=\"50\""); 
         ?>
         <br />
 
-        <label for="duree">Durée d'une frame (ms) :</label>
+        <label class="etiquette" for="duree">Durée d'une frame (ms) :</label>
         <?php 
-        	mkInput("number", "duree", $duree_p, "id=\"duree\" min=\"10\" step=\"10\""); 
+        	mkInput("number", "duree", $duree_p, "id=\"duree\" class=\"champ-nombre\" min=\"10\" step=\"10\""); 
         	?> <!--step pour des sauts de 10 en 10-->
     </fieldset>
 	<br />
-	<fieldset>
-		<legend>Projet</legend>
-			<label for="nom_projet">Nom du projet :</label>
+	<fieldset class="groupe-champs">
+		<legend class="titre-groupe">Projet</legend>
+			<label class="etiquette" for="nom_projet">Nom du projet :</label>
 			<?php
-				echo "<input type=\"text\" name=\"nom_projet\" value=\"" . htmlspecialchars($nom_p) . "\"/>";
+				echo "<input class=\"champ-texte\" type=\"text\" name=\"nom_projet\" id=\"nom_projet\" value=\"" . htmlspecialchars($nom_p) . "\"/>";
 				 
 			?>
 	</fieldset>
@@ -315,8 +317,6 @@ $polices = listerPolices();
 	<br />
 	<br />
 	
-	<input type="submit" name="action" value="Générer">
+	<input class="bouton-valider" type="submit" name="action" value="Générer">
 
 </form>
-
-		

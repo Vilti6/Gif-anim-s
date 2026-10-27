@@ -91,7 +91,7 @@ function ajouterTexte($frame, $texte, $police, $couleur, $position_texte, $large
 	$y = $y + $decalage_y;
 	// pour la couleur du texte 
 	$color = couleurTexte($frame, $couleur, $alpha);
-	imagettftext($frame, $taille, 0, $x, $y, $color, $police, $texte);
+	imagettftext($frame, $taille, 0, (int)$x, (int)$y, $color, $police, $texte);
 }
 
 // ajoute le logo sur une frame 
@@ -104,9 +104,9 @@ function ajouterLogo($frame, $chemin_logo, $position_logo, $largeur, $hauteur)
 	}
 	$specs = getimagesize($chemin_logo);
 	
-	$largeur_logo = $largeur /6;
+	$largeur_logo = (int)($largeur /6);
 	// pour la hauteur
-	$hauteur_logo = $largeur_logo * $specs[1] / $specs[0];
+	$hauteur_logo = (int)($largeur_logo * $specs[1] / $specs[0]);
 	
 	
 	switch ($position_logo)

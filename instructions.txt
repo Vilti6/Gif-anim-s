@@ -2,8 +2,7 @@ Générateur de GIF animés - LAMOTTE Théo et BLONDEL Louis
 
 Installation :
 1. Copier le dossier dans le répertoire du serveur (www/).
-2. Donner les droits d'écriture au serveur sur frames/, gifs/, uploads/ et logos/ :
-	chmod 777 frames gifs uploads logo
-3. exécuter le code contenu dans projets.sql pour créer la base de données et les tables
-4. fournir les bonnes informations dnas le fichier config.php.
+2. Donner les droits d'écriture au serveur sur frames/, gifs/, uploads/ et logos/ : chmod 777 frames gifs uploads logos
+3. exécuter le code contenu dans projet.sql pour créer la base de données et les tables
+4. fournir les bonnes informations dans le fichier config.php.
 5. Ouvrir le projet dans le navigateur, créer un compte et générer un GIF.

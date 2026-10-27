@@ -293,7 +293,7 @@ $polices = listerPolices();
         ?>
         <label for="nb_frames">Nombre d'images (frames) :</label>
         <?php 
-        	mkInput("number", "nb_frames", $nb_frames_p, "id=\"nb_frames\" min=\"2\" max=\"19\""); 
+        	mkInput("number", "nb_frames", $nb_frames_p, "id=\"nb_frames\" min=\"2\" max=\"50\""); 
         ?>
         <br />
 

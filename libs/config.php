@@ -4,8 +4,8 @@ fichier : config.php
 */
 
 $BDD_host="localhost";
-$BDD_user="tlamotte";
-$BDD_password="Noobary-legion9@"; 
+$BDD_user="user";
+$BDD_password="mdp"; 
 $BDD_base="gifanime";
 
 ?>
